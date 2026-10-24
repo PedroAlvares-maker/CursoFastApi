@@ -1,0 +1,9 @@
+body {
+    background-color: beige;
+    display: flex;
+    justify-content: center;
+}
+
+h1 {
+    font-family: Arial, sans-serif;
+}

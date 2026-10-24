@@ -1,11 +1,28 @@
+#correção dos diretórios static e templates
+from pathlib import Path
+BASE_DIR = Path(__file__).resolve().parent
+
 from http import HTTPStatus
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
 
 from cursofastapi.schemas import Message
 
+
 app = FastAPI(title='Autralopithecus API')
+
+# Diretório contendo arquivos estáticos
+app.mount(
+    '/static',
+    StaticFiles(directory=BASE_DIR / 'static'),
+    name='static',
+)
+
+# Diretório contendo os templates Jinja
+templates = Jinja2Templates(directory=BASE_DIR / 'templates')
 
 
 @app.get('/', status_code=HTTPStatus.OK, response_model=Message)
@@ -14,18 +31,7 @@ def read_root():
 
 
 @app.get('/html', status_code=HTTPStatus.OK, response_class=HTMLResponse)
-def retornar_hello_world():
-    return """
-    <!DOCTYPE html>
-    <html lang="pt-br">
-    <head>
-    <meta charset="UTF-8">
-    <meta name="viewport"content="width=device-width,
-    initial-scale=1.0">
-    <title>Retorno</title>
-    </head>
-    <body>
-        <h1>Hello World my friend</h1>
-    </body>
-    </html>
-"""
+def home(request: Request):
+    return templates.TemplateResponse(
+        request=request, name='index.html', context={}
+    )
