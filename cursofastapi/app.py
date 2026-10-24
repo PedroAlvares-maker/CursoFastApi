@@ -1,6 +1,6 @@
 """
-Esse recurso vai ser usado quando o arquivo for 
-online 
+Esse recurso vai ser usado quando o arquivo for
+online
 
 from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent
@@ -15,19 +15,27 @@ from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
-from cursofastapi.schemas import Message
-
+from cursofastapi.schemas import (
+    Message, UserPublic, UserSchema, UserDB
+    )
 
 app = FastAPI(title='Autralopithecus API')
 
+database = [] #banco de dados picktuflou
+
 # Diretório contendo arquivos estáticos
-app.mount('/static', 
-          StaticFiles(directory='/home/pedroalvares/Git/CursoFastApi/cursofastapi/static/'),
-           name='static')
+app.mount(
+    '/static',
+    StaticFiles(
+        directory='/home/pedroalvares/Git/CursoFastApi/cursofastapi/static/'
+    ),
+    name='static',
+)
 
 # Diretório contendo os templates Jinja
-templates = Jinja2Templates(directory='/home/pedroalvares/Git/CursoFastApi/cursofastapi/templates/')
-
+templates = Jinja2Templates(
+    directory='/home/pedroalvares/Git/CursoFastApi/cursofastapi/templates/'
+)
 
 
 @app.get('/', status_code=HTTPStatus.OK, response_model=Message)
@@ -40,3 +48,12 @@ def home(request: Request):
     return templates.TemplateResponse(
         request=request, name='index.html', context={}
     )
+
+
+@app.post('/users/', status_code=HTTPStatus.CREATED, response_model=UserPublic)
+def create_user(user: UserSchema):
+    user_with_id = UserDB(**user.model_dump(), id=len(database) + 1)
+
+    database.append(user_with_id)
+
+    return user_with_id 
