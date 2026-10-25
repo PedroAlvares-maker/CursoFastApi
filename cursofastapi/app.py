@@ -15,13 +15,11 @@ from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
-from cursofastapi.schemas import (
-    Message, UserPublic, UserSchema, UserDB
-    )
+from cursofastapi.schemas import Message, UserDB, UserPublic, UserSchema
 
 app = FastAPI(title='Autralopithecus API')
 
-database = [] #banco de dados picktuflou
+database = []  # banco de dados picktuflou
 
 # Diretório contendo arquivos estáticos
 app.mount(
@@ -56,4 +54,4 @@ def create_user(user: UserSchema):
 
     database.append(user_with_id)
 
-    return user_with_id 
+    return user_with_id
