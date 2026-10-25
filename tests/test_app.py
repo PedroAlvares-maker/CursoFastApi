@@ -21,7 +21,7 @@ def test_root_deve_retornar_hello_world():
 
 def test_deve_retornar_hello_world_com_html():
     client = TestClient(app)
-    response = client.get('/html')
+    response = client.get('/home/')
 
     assert response.text == conteudo
     assert response.status_code == HTTPStatus.OK
